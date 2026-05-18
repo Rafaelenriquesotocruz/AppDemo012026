@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Trip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4" th:text="${trip.id != null} ? 'Editar Viaje' : 'Nuevo Viaje'">
+            Formulario de Trip
+        </h1>
+        
+        <form th:action="@{/trips/save}" th:object="${trip}" method="post" enctype="multipart/form-data" class="card p-4">
+
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{imagen}" />
+            
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Viaje:</label>
+                <input type="text" th:field="*{nombre}" class="form-control" id="nombre" required />
+                <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger"></div>
+            </div>
+            
+
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción Corta:</label>
+                <textarea th:field="*{descripcion}" class="form-control" id="descripcion" rows="2" required></textarea>
+                <div th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="text-danger"></div>
+            </div>
+            
+
+            <div class="mb-3">
+                <label for="detalles" class="form-label">Detalles (puede incluir HTML):</label>
+                <textarea th:field="*{detalles}" class="form-control" id="detalles" rows="4"></textarea>
+                <div class="form-text">Puedes usar etiquetas HTML como &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, etc.</div>
+            </div>
+            
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label for="fecha" class="form-label">Fecha (dd-MM-yyyy):</label>
+                    <input type="text" th:field="*{fecha}" class="form-control" id="fecha" placeholder="10-05-2024" required />
+                    <div class="form-text">Formato: dd-mm-yyyy (ej: 15-04-2026)</div>
+                    <div th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}" class="text-danger"></div>
+                </div>
+                
+
+                <div class="col-md-4 mb-3">
+                    <label for="costo" class="form-label">Costo ($):</label>
+                    <input type="number" step="0.01" th:field="*{costo}" class="form-control" id="costo" required />
+                    <div th:if="${#fields.hasErrors('costo')}" th:errors="*{costo}" class="text-danger"></div>
+                </div>
+                
+
+                <div class="col-md-4 mb-3">
+                    <label for="categoria" class="form-label">Categoría:</label>
+                    <select th:field="*{categoria.id}" class="form-select" id="categoria" required>
+                        <option value="">Seleccione una categoría</option>
+                        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}" class="text-danger"></div>
+                </div>
+            </div>
+            
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label for="destacado" class="form-label">Destacado:</label>
+                    <select th:field="*{destacado}" class="form-select" id="destacado">
+                        <option th:value="1">Sí, destacar este viaje</option>
+                        <option th:value="0">No destacar</option>
+                    </select>
+                </div>
+                
+
+                <div class="col-md-6 mb-3">
+                    <label for="imagenFile" class="form-label">Imagen:</label>
+                    <input type="file" name="imagenFile" class="form-control" id="imagenFile" />
+                    <div class="form-text" th:if="${trip.imagen != null and trip.imagen != 'no-image.png'}">
+                        Imagen actual: <span th:text="${trip.imagen}"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Guardar Trip</button>
+                <a th:href="@{/trips/list}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        window.addEventListener('DOMContentLoaded', function() {
+            var fechaInput = document.getElementById('fecha');
+            if (fechaInput && fechaInput.value && fechaInput.value.includes('-')) {
+                var fecha = new Date(fechaInput.value);
+                if (!isNaN(fecha.getTime())) {
+                    var day = fecha.getDate().toString().padStart(2, '0');
+                    var month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+                    var year = fecha.getFullYear();
+                    fechaInput.value = day + '-' + month + '-' + year;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

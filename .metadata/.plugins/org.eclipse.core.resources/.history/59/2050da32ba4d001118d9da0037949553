@@ -1,0 +1,5 @@
+package com.sv.appDemo.service.db;
+
+public class TripServiceJpa {
+
+}
