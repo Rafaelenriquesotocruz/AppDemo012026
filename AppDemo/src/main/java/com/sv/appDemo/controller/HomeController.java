@@ -70,4 +70,18 @@ public class HomeController {
         model.addAttribute("id", idTrip);
         return "mensaje";
     }
+
+
+    @GetMapping("/testTrips")
+    public String testTrips(Model model) {
+        model.addAttribute("mensaje", "Prueba técnica - Rama test-de-repositorio-trips");
+        System.out.println("Prueba técnica - Rama test-de-repositorio-trips");
+        return "mensaje";
+    }
 }
+    // Metodo agregado para rama test-de-repositorio-trips
+    @GetMapping("/testTrips")
+    public String testTrips(Model model) {
+        model.addAttribute("mensaje", "Prueba tecnica - Rama test-de-repositorio-trips");
+        return "mensaje";
+    }
